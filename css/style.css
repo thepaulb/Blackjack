@@ -1,0 +1,304 @@
+@layer reset {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  /* https://kilianvalkhof.com/2022/css-html/your-css-reset-needs-text-size-adjust-probably/ */
+  html {
+    -moz-text-size-adjust: none;
+    -webkit-text-size-adjust: none;
+    text-size-adjust: none;
+  }
+
+  body,
+  h1,
+  h2,
+  h3,
+  h4,
+  p,
+  figure,
+  blockquote,
+  dl,
+  dd {
+    margin: 0;
+  }
+
+  /* https://www.scottohara.me/blog/2019/01/12/lists-and-safari.html */
+  [role="list"] {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    min-block-size: 100vh;
+    line-height: 1.6;
+  }
+
+  h1,
+  h2,
+  h3,
+  button,
+  input,
+  label {
+    line-height: 1.1;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    text-wrap: balance;
+  }
+
+  p,
+  li {
+    text-wrap: pretty;
+  }
+
+  img,
+  picture {
+    max-inline-size: 100%;
+    display: block;
+  }
+
+  input,
+  button,
+  textarea,
+  select {
+    font: inherit;
+  }
+}
+
+@layer utilities {
+  [hidden] {
+    display: none;
+  }
+  .text-center {
+    text-align: center;
+  }
+
+  .visually-hidden {
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    height: 1px;
+    overflow: hidden;
+    position: absolute;
+    white-space: nowrap;
+    width: 1px;
+  }
+}
+
+@layer base {
+  :root {
+    --clr-white: hsl(0, 0%, 100%);
+    --clr-gray-100: hsl(0, 4%, 87%);
+
+    --fs-300: 0.875rem;
+    --fs-400: 1rem;
+    --fs-500: 1.125rem;
+    --fs-600: 1.25rem;
+    --fs-700: 1.5rem;
+    --fs-800: 2rem;
+    --fs-900: 3.75rem;
+    --fs-1000: 3.75rem;
+
+    @media (width > 760px) {
+      --fs-300: 0.875rem;
+      --fs-400: 1rem;
+      --fs-500: 1.25rem;
+      --fs-600: 1.5rem;
+      --fs-700: 2rem;
+      --fs-800: 3rem;
+      --fs-900: 5rem;
+      --fs-1000: 7.5rem;
+    }
+
+    --text-main: var(--clr-gray-100);
+    --text-high-contrast: var(--clr-white);
+    --text-brand: var(--clr-brand-500);
+    --text-brand-light: var(--clr-brand-400);
+
+    --background-accent-light: var(--clr-green-400);
+    --background-accent-main: var(--clr-green-500);
+    --background-accent-dark: var(--clr-green-600);
+
+    --background-extra-light: var(--clr-brown-500);
+    --background-light: var(--clr-brown-600);
+    --background-main: var(--clr-brown-700);
+    --background-dark: var(--clr-brown-800);
+    --background-extra-dark: var(--clr-brown-900);
+
+    --font-size-heading-sm: var(--fs-700);
+    --font-size-heading-regular: var(--fs-800);
+    --font-size-heading-lg: var(--fs-900);
+    --font-size-heading-xl: var(--fs-1000);
+
+    --font-size-sm: var(--fs-300);
+    --font-size-regular: var(--fs-400);
+    --font-size-md: var(--fs-500);
+    --font-size-lg: var(--fs-600);
+
+    --border-radius-1: 0.25rem;
+    --border-radius-2: 0.5rem;
+    --border-radius-3: 0.75rem;
+
+    .black {
+      color: #000;
+    }
+  }
+}
+
+@layer components {
+  .player {
+    &.inactive {
+      opacity: 50%;
+    }
+    &.active {
+      opacity: 100%;
+    }
+  }
+
+  #player1,
+  #dealer {
+    margin-top: 2rem;
+  }
+  .cards {
+    margin-block: 1rem;
+  }
+
+  .card {
+    width: 60px;
+    padding: 5px;
+    border: solid 1px #000;
+    display: inline-block;
+    border-radius: 10px;
+    font-size: 22px;
+    text-align: center;
+    margin: 0 0 0 -12px;
+    background: white;
+    filter: drop-shadow(0 0.1rem 0.1rem rgb(0, 18, 4));
+    background: #ffffff;
+    background: linear-gradient(
+      331deg,
+      rgba(255, 255, 255, 1) 20%,
+      rgba(222, 222, 222, 1) 100%
+    );
+
+    &:first-child {
+      margin: 0 0 0 0;
+      padding: 5px;
+    }
+
+    &.blank {
+      height: 80px;
+      border: solid 1px #d6ae11;
+      background: none;
+    }
+
+    &.face-down div:first-child {
+      background: pink;
+    }
+  }
+}
+
+@layer layout {
+  body {
+    font-family: sans-serif;
+    margin: 1em auto;
+    background: radial-gradient(circle at center, rgb(0, 38, 7), rgb(0, 9, 2));
+    color: var(--clr-gray-100);
+    padding-inline: 1rem;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+
+    @media (width > 760px) {
+      padding-inline: 4rem;
+    }
+  }
+
+  .footer {
+    padding-block: 2rem;
+    text-align: center;
+  }
+
+  .players {
+    flex: 1;
+  }
+
+  h1 {
+    margin-top: 0;
+    font-size: 3rem;
+    text-align: center;
+  }
+
+  h2 {
+    margin-top: 0;
+    font-size: 20px;
+  }
+
+  h3 {
+    margin-top: 0;
+    font-size: 18px;
+  }
+
+  h3 span {
+    font-size: 14px;
+  }
+
+  h4 {
+    margin-top: 0;
+    font-size: 16px;
+  }
+
+  h5 {
+    margin-top: 0;
+    font-size: 14px;
+  }
+
+  h6 {
+    margin-top: 0;
+    font-size: 12px;
+  }
+
+  ol {
+    margin-top: 0;
+  }
+
+  .status {
+    margin-bottom: 10px;
+  }
+
+  /*-----------------------------*/
+
+  .red {
+    color: red;
+  }
+
+  .green {
+    color: green;
+  }
+
+  .player,
+  .dealer {
+    padding: 5px;
+  }
+
+  .face-down div div {
+    visibility: hidden;
+  }
+
+  .status {
+    margin-left: 6px;
+    padding: 2px 4px;
+    border: solid 1px #999;
+    border-radius: 4px;
+  }
+
+  .setup {
+    margin-bottom: 18px;
+  }
+}

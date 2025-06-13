@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Blackjack</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="css/style.css" />
+    <script src="js/app.js" defer type="module"></script>
+  </head>
+
+  <body>
+    <main id="players" class="players">
+      <header><h1>Blackjack</h1></header>
+    </main>
+    <footer class="footer">
+      <div id="game" class="game">
+        <div id="actions_buttons">
+          <button data-action="addplayer">Add Player</button>
+          <button data-action="deal">Deal</button>
+        </div>
+      </div>
+    </footer>
+    <template id="player__tmpl">
+      <header class="player__hd">
+        <h3><span class="status visually-hidden"></span></h3>
+      </header>
+      <div class="player__bd">
+        <div class="cards">
+          <div class="card blank">
+            <div><div class="face"></div></div>
+          </div>
+        </div>
+      </div>
+      <footer class="player__ft visually-hidden">
+        <button>Hit</button>
+        <button>Stand</button>
+      </footer>
+    </template>
+
+    <template id="card__tmpl">
+      <div class="card">
+        <div><div class="face"></div></div>
+      </div>
+    </template>
+  </body>
+</html>
