@@ -2,8 +2,9 @@ import Hand from "./Hand.js";
 
 export class Player {
   constructor(name, game) {
-    this.label = name;
-    this.name = name.replaceAll(" ", "").toLowerCase();
+    // Internal ref;
+    this.id = name.replaceAll(" ", "").toLowerCase();
+    this.name = name;
     this.game = game;
     this.elem = this.createElement();
     this.hand = new Hand(this.elem);
@@ -15,7 +16,7 @@ export class Player {
     // this method is used to allow the Dealer
     // class to reuse the render method;
     const elem = document.createElement("section");
-    elem.setAttribute("id", this.name);
+    elem.setAttribute("id", this.id);
     elem.setAttribute("class", "player");
     const parent = document.querySelector("#players");
     parent.append(elem);
@@ -25,15 +26,15 @@ export class Player {
   render() {
     const tmpl = document.querySelector("#player__tmpl");
     const clone = tmpl.content.cloneNode(true);
-    clone.querySelector(".player__hd").id = `${this.name}__hd`;
-    clone.querySelector(".player__bd").id = `${this.name}__bd`;
-    clone.querySelector("h3").prepend(`${this.label}`);
+    clone.querySelector(".player__hd").id = `${this.id}__hd`;
+    clone.querySelector(".player__bd").id = `${this.id}__bd`;
+    clone.querySelector("h3").prepend(`${this.name}`);
     clone.querySelectorAll("button").forEach((el, i) => r.call(this, el, i));
     this.elem.append(clone);
 
-    //sets the data attrs based on player name;
+    //sets the data attrs based on player id;
     function r(el, i) {
-      i > 0 ? (el.dataset.stand = this.name) : (el.dataset.hit = this.name);
+      i > 0 ? (el.dataset.stand = this.id) : (el.dataset.hit = this.id);
     }
   }
 
