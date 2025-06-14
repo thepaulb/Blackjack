@@ -116,6 +116,11 @@
       --fs-1000: 7.5rem;
     }
 
+    @font-face {
+      font-family: Blackjack;
+      src: url(./assets/CasinoShadow.ttf);
+    }
+
     --text-main: var(--clr-gray-100);
     --text-high-contrast: var(--clr-white);
     --text-brand: var(--clr-brand-500);
@@ -230,8 +235,10 @@
   }
 
   h1 {
+    font-family: "Blackjack";
     margin-top: 0;
-    font-size: 3rem;
+    font-size: 4rem;
+    letter-spacing: 0.5rem;
     text-align: center;
   }
 
