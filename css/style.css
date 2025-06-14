@@ -207,6 +207,29 @@
       background: pink;
     }
   }
+
+  .button {
+    display: inline flex;
+    cursor: pointer;
+    font-weight: 700;
+    text-decoration: none;
+    background-color: #2d9638;
+    padding: 0.5rem 1rem;
+    border-radius: var(--border-radius-3);
+    color: var(--clr-gray-100);
+    border: none;
+  }
+
+  .button:hover,
+  .button:focus-visible {
+    opacity: 80%;
+    color: #ffffff;
+  }
+
+  [data-action="addplayer"],
+  [data-hit] {
+    background-color: #8c1313;
+  }
 }
 
 @layer layout {
@@ -237,8 +260,8 @@
   h1 {
     font-family: "Blackjack";
     margin-top: 0;
-    font-size: 4rem;
-    letter-spacing: 0.5rem;
+    font-size: 3rem;
+    letter-spacing: 0.2rem;
     text-align: center;
   }
 
