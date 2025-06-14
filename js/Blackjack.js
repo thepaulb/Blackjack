@@ -24,7 +24,7 @@ class Blackjack {
         if (event == "init") {
           console.log("Set up inital game events");
           console.log(event + ": Add new player Dealer");
-          //Add dealer here;
+          //Add Dealer here;
           this.addPlayer();
         }
         if (event == "addplayer") {

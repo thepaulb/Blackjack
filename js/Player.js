@@ -65,7 +65,7 @@ export class Player {
       // Pause to allow user to 'get it' before moving on to next player;
       setTimeout(() => {
         this.game.transition("activateplayer");
-      }, 750);
+      }, 1000);
     }
   }
 
