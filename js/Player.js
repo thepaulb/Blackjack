@@ -78,7 +78,13 @@ export class Player {
 
   activate() {
     this.elem.classList.replace("inactive", "active");
-    this.elem.querySelector(".player__ft").classList.remove("visually-hidden");
+    // This check is here because the Dealer doesn't have a footer;
+    const footer = this.elem.querySelector(".player__ft");
+    if (footer) {
+      this.elem
+        .querySelector(".player__ft")
+        .classList.remove("visually-hidden");
+    }
   }
 
   deactivate() {

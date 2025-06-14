@@ -83,20 +83,31 @@ export default class Blackjack {
   checkWinners() {
     const dealer = this.players[this.players.length - 1];
     const dealerScore = this.checkHand(dealer.hand.cards);
-    // The reason for the slice() is last player in the array is always the Dealer;
+    const winners = [];
+    // The reason for the slice() is last player in the
+    // array is always the Dealer;
     this.players.slice(0, this.players.length - 1).forEach((player) => {
       let playerScore = this.checkHand(player.hand.cards);
+      // Everything but these senario's result in a player win;
       if (
-        // Everything but these senerios result in a player win;
-        dealerScore.status === "bust" ||
-        playerScore.status !== "bust" ||
-        dealerScore.status !== "blackjack" ||
-        dealerScore.status !== 21 ||
-        dealerScore.status < playerScore.status
+        (dealerScore.status == "bust" && playerScore.status != "bust") ||
+        (dealerScore.status != "blackjack" &&
+          dealerScore.status < playerScore.status)
       ) {
-        player.activate();
+        winners.push(player.name);
       }
     });
+    if (winners.length == 0) {
+      winners.push("House wins!");
+    }
+    this.showWinners(winners.join(", "));
+  }
+
+  showWinners(winners) {
+    const dialog = document.getElementById("winners__dialog");
+    const para = dialog.querySelector("p");
+    para.append(winners);
+    dialog.showModal();
   }
 
   setActivePlayer() {
