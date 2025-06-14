@@ -1,10 +1,10 @@
-import getDeck from "./Deck.js";
+import deck from "./Deck.js";
 
 export default class Hand {
   constructor(el) {
     this.elem = el;
     this.cards = [];
-    this.deck = getDeck();
+    this.deck = deck();
   }
 
   addCard(card, el) {

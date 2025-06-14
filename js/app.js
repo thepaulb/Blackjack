@@ -20,7 +20,7 @@ Special Rules:
 Insurance: If the dealer’s upcard is an Ace, players can take “insurance” by betting half their initial bet. If the dealer has a Blackjack (Ace and 10-value card), insurance pays 2:1.
 Blackjack: If a player’s initial two cards are an Ace and a 10-value card, they have a “Blackjack” and win immediately, unless the dealer also has a Blackjack.
 */
-import Blackjack from "./Blackjack.js";
+import blackjack from "./Blackjack.js";
 
 /**
  * Handles user inputs for initial game setup;
@@ -48,10 +48,9 @@ class InitialisationUI {
 }
 
 window.addEventListener("DOMContentLoaded", async () => {
-  var blackjack = new Blackjack({});
   var initUI = new InitialisationUI(
     document.querySelector("#actions_buttons"),
-    blackjack
+    blackjack()
   );
-  blackjack.startGame();
+  blackjack().startGame();
 });

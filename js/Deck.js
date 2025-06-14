@@ -86,8 +86,9 @@ class Deck {
   }
 }
 
-const deck = new Deck();
+const d = new Deck();
 
-export default function getDeck() {
-  return deck;
+// I guess a simple factory?
+export default function deck() {
+  return d;
 }

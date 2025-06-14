@@ -1,4 +1,4 @@
-import getDeck from "./Deck.js";
+import deck from "./Deck.js";
 import { Player, Dealer } from "./Player.js";
 
 // Define the possible states
@@ -10,9 +10,9 @@ const states = {
   GAME_OVER: "gameOver",
 };
 
-export default class Blackjack {
+class Blackjack {
   constructor() {
-    this.deck = getDeck();
+    this.deck = deck();
     this.state = states.START;
     this.players = [];
     this.currentPlayer = 0;
@@ -197,4 +197,10 @@ export default class Blackjack {
 
     return { value: value, status: status };
   }
+}
+
+const bj = new Blackjack();
+
+export default function blackjack() {
+  return bj;
 }
