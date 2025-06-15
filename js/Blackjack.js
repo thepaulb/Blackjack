@@ -106,6 +106,7 @@ class Blackjack {
   showWinners(winners) {
     const dialog = document.getElementById("winners__dialog");
     const para = dialog.querySelector("p");
+    para.innerHTML = "";
     para.append(winners);
     dialog.showModal();
   }
@@ -126,6 +127,26 @@ class Blackjack {
     } else {
       console.log("Game cannot start from current state");
     }
+  }
+
+  newGame() {
+    console.log("New Game!");
+    // clean up players;
+    this.players.forEach((player) => {
+      player.remove();
+    });
+
+    // clean up game;
+    console.log("this.players:", this.players);
+    this.players = [];
+    console.log("this.players x2:", this.players);
+    console.log(this.players);
+    this.currentPlayer = 0;
+
+    // set state;
+    this.state = states.START;
+    // fire startGame;
+    this.startGame();
   }
 
   getPlayerName() {

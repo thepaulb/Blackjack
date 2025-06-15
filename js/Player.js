@@ -38,6 +38,12 @@ export class Player {
     }
   }
 
+  remove() {
+    delete this.hand;
+    // console.log(this.hand);
+    this.elem.remove();
+  }
+
   handleEvent(event) {
     if (event.target.closest("[data-hit]")) {
       this.game.transition("playerhit", { player: this });
