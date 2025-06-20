@@ -38,6 +38,12 @@ export class Player {
     }
   }
 
+  remove() {
+    delete this.hand;
+    // console.log(this.hand);
+    this.elem.remove();
+  }
+
   handleEvent(event) {
     if (event.target.closest("[data-hit]")) {
       this.game.transition("playerhit", { player: this });
@@ -109,5 +115,18 @@ export class Dealer extends Player {
   render() {
     super.render();
     this.elem.querySelector(".player__ft").remove();
+  }
+
+  updateHand(cards) {
+    super.updateHand(...arguments);
+    if (this.hand.cards.length == 2) {
+      console.log("Dealer::updateHand(), hide card 2");
+      this.elem.querySelectorAll(".card")[1].classList.add("face-down");
+      this.elem.querySelector("h3 .status").classList.add("visually-hidden");
+    } else {
+      console.log("Dealer::updateHand(), show card 2");
+      this.elem.querySelectorAll(".card")[1].classList.remove("face-down");
+      this.elem.querySelector("h3 .status").classList.remove("visually-hidden");
+    }
   }
 }

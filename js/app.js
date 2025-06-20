@@ -44,6 +44,9 @@ class InitialisationUI {
     if (btn.dataset.action == "addplayer") {
       this.game.transition("addplayer");
     }
+    if (btn.dataset.action == "newgame") {
+      this.game.newGame();
+    }
   }
 }
 
