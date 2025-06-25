@@ -1,4 +1,5 @@
 import Hand from "./Hand.js";
+import Bank from "./Bank.js";
 
 export class Player {
   constructor(name, game) {
@@ -10,6 +11,10 @@ export class Player {
     this.hand = new Hand(this.elem);
     this.elem.addEventListener("click", this);
     this.render();
+    // Hmmm … bad coupling :/
+    if (this.name != "Dealer") {
+      this.bank = new Bank(this.elem.querySelector(".wager"));
+    }
   }
 
   createElement() {
@@ -38,10 +43,17 @@ export class Player {
     }
   }
 
-  remove() {
+  reset() {
     delete this.hand;
-    // console.log(this.hand);
-    this.elem.remove();
+    document.getElementById(`${this.id}`).remove();
+    this.elem = this.createElement();
+    this.elem.addEventListener("click", this);
+    this.hand = new Hand(this.elem);
+    this.render();
+    // Hmmm … bad coupling :/
+    if (this.name != "Dealer") {
+      this.bank.reset(this.elem.querySelector(".wager"));
+    }
   }
 
   handleEvent(event) {
@@ -105,6 +117,20 @@ export class Player {
       footer.classList.add("visually-hidden");
     }
   }
+
+  placeBet() {
+    // Dealer doesn't have a bank, obvs.
+    // Hhmmm … this is getting a bit messy
+    // Player shouldn't be aware of the concept of Dealer
+    if (this.bank) {
+      this.bank.deactivate();
+    }
+  }
+
+  updateBank(status) {
+    //console.log(`${this.name}:${status}`);
+    this.bank.updateBank(...arguments);
+  }
 }
 
 export class Dealer extends Player {
@@ -114,6 +140,7 @@ export class Dealer extends Player {
 
   render() {
     super.render();
+    this.elem.querySelector(".wager").remove();
     this.elem.querySelector(".player__ft").remove();
   }
 

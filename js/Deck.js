@@ -48,10 +48,13 @@ class Deck {
         deck.push(suits[j] + ranks[i]);
       }
     }
+    // TEST CASES
+    //––––––––––––––––––
+    // return ["HA", "SK", "D2", "SJ", "S6", ...this.shuffle(deck)]; // Blackjack
+    // return ['HA', 'SK', 'D2', 'S3', 'H5', 'SQ', ...this.shuffle(deck)]; //dealer hit
+    // return ["HA", "SA", "D2", "SJ", "SA", ...this.shuffle(deck)]; // wild aces;
+    // return ["H9", "SK", "D8", "SJ", "SA", ...this.shuffle(deck)]; // Player 1 wins!
 
-    //return ["HA", "SK", "D2", "SJ", "S6", ...this.shuffle(deck)]; // Blackjack
-    //return ['HA', 'SK', 'D2', 'S3', 'H5', 'SQ', ...this.shuffle(deck)]; //dealer hit
-    //return ["HA", "SA", "D2", "SJ", "SA", ...this.shuffle(deck)]; // wild aces;
     return this.shuffle(deck);
   }
 
