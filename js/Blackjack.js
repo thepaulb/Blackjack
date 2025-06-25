@@ -24,11 +24,21 @@ class Blackjack {
         if (event == "init") {
           console.log("Set up inital game events");
           console.log(event + ": Add new player Dealer");
-          //Add Dealer here;
-          this.addPlayer();
+          // this is a restart;
+          if (this.players.length == 0) {
+            //Add Dealer here;
+            this.addPlayer();
+          }
         }
         if (event == "addplayer") {
           this.addPlayer();
+        }
+        if (event == "newgame") {
+          this.currentPlayer = 0;
+          // reset players in reverse to ensure dealer first;
+          for (let i = this.players.length - 1; i >= 0; i--) {
+            this.players[i].reset();
+          }
         }
         if (event == "deal") {
           this.state = states.DEAL;
@@ -42,6 +52,9 @@ class Blackjack {
         }
         if (event == "deal") {
           this.state = states.PLAY;
+          // set bet first …
+          this.players.forEach((player) => player.placeBet());
+          // … then deal cards;
           this.players.forEach((player) => this.dealCards(player, 2));
           this.transition("activateplayer");
         }
@@ -92,9 +105,20 @@ class Blackjack {
       if (
         (dealerScore.status == "bust" && playerScore.status != "bust") ||
         (dealerScore.status != "blackjack" &&
-          dealerScore.status < playerScore.status)
+          dealerScore.status <= playerScore.status) ||
+        playerScore.status == "blackjack"
       ) {
+        // winner logic;
         winners.push(player.name);
+        if (playerScore.status == "blackjack") {
+          player.updateBank("blackjack");
+        } else if (playerScore.status == dealerScore.status) {
+          player.updateBank("push");
+        } else {
+          player.updateBank("win");
+        }
+      } else {
+        player.updateBank("lose");
       }
     });
     if (winners.length == 0) {
@@ -130,23 +154,17 @@ class Blackjack {
   }
 
   newGame() {
-    console.log("New Game!");
-    // clean up players;
-    this.players.forEach((player) => {
-      player.remove();
-    });
-
-    // clean up game;
-    console.log("this.players:", this.players);
-    this.players = [];
-    console.log("this.players x2:", this.players);
-    console.log(this.players);
-    this.currentPlayer = 0;
-
+    // this.currentPlayer = 0;
+    //console.log(`New Game!${this.players.length}, ${this.players}`);
+    // // clean up players;
+    // this.players.forEach((player) => {
+    //   player.reset();
+    // });
     // set state;
     this.state = states.START;
+    this.transition("newgame");
     // fire startGame;
-    this.startGame();
+    // this.startGame();
   }
 
   getPlayerName() {

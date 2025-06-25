@@ -216,6 +216,40 @@
     }
   }
 
+  h3 {
+    &.accent {
+      border: solid 1px var(--background-accent-main);
+      padding: 1rem;
+      margin-block: 1rem;
+    }
+  }
+
+  .wager {
+    margin-bottom: 1rem;
+    display: inline-flex;
+    gap: 1rem;
+  }
+
+  .set-stake,
+  .stake,
+  .bank {
+    flex-direction: row;
+  }
+
+  .chip {
+    background-color: rgb(74, 147, 147);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+  }
+
+  .bank .chip {
+    background-color: rgb(33, 65, 128);
+  }
+
   .button {
     display: inline flex;
     cursor: pointer;
@@ -301,7 +335,6 @@
   }
 
   h3 {
-    margin-top: 0;
     font-size: 18px;
   }
 

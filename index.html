@@ -11,8 +11,11 @@
 
   <body>
     <main id="players" class="players">
-      <header><h1>BlackJack</h1></header>
-      <h2 class="text-center">Dealer must draw to 16 and stand on 17s</h2>
+      <header>
+        <h1>BlackJack</h1>
+        <h3 class="text-center accent">Black Jack pays 2 to 1</h3>
+        <h2 class="text-center">Dealer must draw to 16 and stand on 17s</h2>
+      </header>
     </main>
     <footer class="footer">
       <div id="game" class="game">
@@ -40,6 +43,18 @@
             <div><div class="face"></div></div>
           </div>
         </div>
+        <div class="wager">
+          <form class="set-stake">
+            <label for="wager">Place your bet:</label>
+            <input type="number" id="wager" name="wager" min="1" max="100" />
+          </form>
+          <div class="stake visually-hidden">
+            <span class="chip">0</span>
+          </div>
+          <div class="bank">
+            <span class="chip">20</span>
+          </div>
+        </div>
       </div>
       <footer class="player__ft visually-hidden">
         <button class="button">Hit</button>
@@ -49,7 +64,7 @@
 
     <template id="card__tmpl">
       <div class="card">
-        <div><div class="face"></div></div>
+        <div><div class="face accent"></div></div>
       </div>
     </template>
   </body>
