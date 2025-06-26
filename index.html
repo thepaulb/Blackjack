@@ -45,8 +45,17 @@
         </div>
         <div class="wager">
           <form class="set-stake">
-            <label for="wager">Place your bet:</label>
-            <input type="number" id="wager" name="wager" min="1" max="100" />
+            <label class="set-stake__label"
+              >Stake:
+              <input
+                class="set-stake__input"
+                type="number"
+                name="wager"
+                value="0"
+                min="1"
+                max="100"
+              />
+            </label>
           </form>
           <div class="stake visually-hidden">
             <span class="chip">0</span>

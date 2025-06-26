@@ -98,6 +98,7 @@
 
     --clr-green-dark: rgb(0, 38, 7);
     --clr-green-extra-dark: rgb(0, 9, 2);
+    --clr-green-mid: #2d9638;
 
     --clr-gold-medium: #d6ae11;
 
@@ -250,12 +251,24 @@
     background-color: rgb(33, 65, 128);
   }
 
+  .set-stake__label {
+    margin-block: 0.25rem;
+    display: inline-block;
+  }
+  .set-stake__input {
+    border: none;
+    background-color: var(--clr-green-dark);
+    color: var(--clr-white);
+    border-radius: var(--border-radius-1);
+    padding: 0.5rem;
+  }
+
   .button {
     display: inline flex;
     cursor: pointer;
     font-weight: 700;
     text-decoration: none;
-    background-color: #2d9638;
+    background-color: var(--clr-green-mid);
     padding: 0.5rem 1rem;
     border-radius: var(--border-radius-3);
     color: var(--clr-gray-100);
