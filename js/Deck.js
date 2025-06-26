@@ -51,9 +51,10 @@ class Deck {
     // TEST CASES
     //––––––––––––––––––
     // return ["HA", "SK", "D2", "SJ", "S6", ...this.shuffle(deck)]; // Blackjack
-    // return ['HA', 'SK', 'D2', 'S3', 'H5', 'SQ', ...this.shuffle(deck)]; //dealer hit
+    // return ['HA', 'SK', 'D2', 'S3', 'H5', 'SQ', ...this.shuffle(deck)]; // dealer hit
     // return ["HA", "SA", "D2", "SJ", "SA", ...this.shuffle(deck)]; // wild aces;
     // return ["H9", "SK", "D8", "SJ", "SA", ...this.shuffle(deck)]; // Player 1 wins!
+    // return ["H9", "SK", "SQ", "S10", "SA", ...this.shuffle(deck)]; // Dealer wins! off 2 cards!
 
     return this.shuffle(deck);
   }

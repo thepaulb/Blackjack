@@ -66,7 +66,7 @@ export class Player {
 
   updateHand(cards) {
     // This is the yellow card outline, for display only;
-    const marker = this.elem.querySelector(".blank");
+    const marker = this.elem.querySelector(".marker");
     if (marker) {
       marker.remove();
     }
@@ -142,6 +142,11 @@ export class Dealer extends Player {
     super.render();
     this.elem.querySelector(".wager").remove();
     this.elem.querySelector(".player__ft").remove();
+  }
+
+  activate() {
+    super.activate();
+    this.elem.querySelectorAll(".card")[1].classList.remove("face-down");
   }
 
   updateHand(cards) {

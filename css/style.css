@@ -206,7 +206,7 @@
       padding: 5px;
     }
 
-    &.blank {
+    &.accent {
       height: 80px;
       border: solid 1px var(--background-accent-main);
       background: none;
