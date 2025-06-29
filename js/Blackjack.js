@@ -154,33 +154,18 @@ class Blackjack {
   }
 
   newGame() {
-    // this.currentPlayer = 0;
-    //console.log(`New Game!${this.players.length}, ${this.players}`);
-    // // clean up players;
-    // this.players.forEach((player) => {
-    //   player.reset();
-    // });
-    // set state;
     this.state = states.START;
     this.transition("newgame");
-    // fire startGame;
-    // this.startGame();
-  }
-
-  getPlayerName() {
-    // first player always the Dealer;
-    return this.players.length == 0
-      ? "Dealer"
-      : `Player ${this.players.length}`;
   }
 
   addPlayer() {
     if (this.state === states.START) {
       // add player to the front of the array, ensuring Dealer always last;
       if (this.players.length == 0) {
-        this.players.push(new Dealer(this.getPlayerName(), this));
+        this.players.push(new Dealer("Dealer", this));
       } else {
-        this.players.unshift(new Player(this.getPlayerName(), this));
+        this.players.unshift(new Player(`Player ${this.players.length}`, this));
+        var x = 0;
       }
       //console.log(this.players);
     } else {

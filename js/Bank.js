@@ -8,7 +8,7 @@ export default class Bank {
 
   handleEvent(e) {
     if (e.target.value <= this.bank) {
-      this.stake = e.target.value;
+      this.stake = parseInt(e.target.value);
       var temp = this.bank - this.stake;
       var stk = this.elem.querySelector(".stake .chip");
       var bnk = this.elem.querySelector(".bank .chip");
