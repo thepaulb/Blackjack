@@ -3,7 +3,7 @@ class Deck {
     this.deck = this.create();
   }
 
-  getCardHtml(card, el) {
+  getCardHtml(card) {
     let suit = card.slice(0, 1);
     let rank = card.slice(1);
     let icon = null;
@@ -34,7 +34,7 @@ class Deck {
     const clone = tmpl.content.cloneNode(true);
     clone.querySelector(".card").classList.add(col);
     clone.querySelector(".face").innerHTML = `${rank}<br />${icon}`;
-    el.append(clone);
+    return clone;
   }
 
   create() {

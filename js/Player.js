@@ -7,25 +7,30 @@ export class Player {
     this.id = name.replaceAll(" ", "").toLowerCase();
     this.name = name;
     this.game = game;
-    this.elem = this.createElement();
+    this.elem = this.setup();
+  }
+
+  setup() {
+    this.createElement();
     this.hand = new Hand(this.elem);
-    this.elem.addEventListener("click", this);
     this.render();
     // Hmmm … bad coupling :/
     if (this.name != "Dealer") {
       this.bank = new Bank(this.elem.querySelector(".wager"));
     }
+    return this.elem;
   }
 
   createElement() {
     // this method is used to allow the Dealer
     // class to reuse the render method;
-    const elem = document.createElement("section");
-    elem.setAttribute("id", this.id);
-    elem.setAttribute("class", "player");
+    this.elem = document.createElement("section");
+    this.elem.setAttribute("id", this.id);
+    this.elem.setAttribute("class", "player");
     const parent = document.querySelector("#players");
-    parent.append(elem);
-    return elem;
+    parent.append(this.elem);
+    this.elem.addEventListener("click", this);
+    return this.elem;
   }
 
   render() {
@@ -36,6 +41,7 @@ export class Player {
     clone.querySelector("h3").prepend(`${this.name}`);
     clone.querySelectorAll("button").forEach((el, i) => r.call(this, el, i));
     this.elem.append(clone);
+    return this.elem;
 
     //sets the data attrs based on player id;
     function r(el, i) {
@@ -46,14 +52,7 @@ export class Player {
   reset() {
     delete this.hand;
     document.getElementById(`${this.id}`).remove();
-    this.elem = this.createElement();
-    this.elem.addEventListener("click", this);
-    this.hand = new Hand(this.elem);
-    this.render();
-    // Hmmm … bad coupling :/
-    if (this.name != "Dealer") {
-      this.bank.reset(this.elem.querySelector(".wager"));
-    }
+    this.setup();
   }
 
   handleEvent(event) {
@@ -98,6 +97,7 @@ export class Player {
     this.elem.classList.replace("inactive", "active");
     // This check is here because the Dealer doesn't have a footer;
     const footer = this.elem.querySelector(".player__ft");
+    // Dealer doesn't have a footer;
     if (footer) {
       this.elem
         .querySelector(".player__ft")
@@ -113,6 +113,7 @@ export class Player {
     }
     // This check is here because the Dealer doesn't have a footer;
     const footer = this.elem.querySelector(".player__ft");
+    // Dealer doesn't have a footer;
     if (footer) {
       footer.classList.add("visually-hidden");
     }
@@ -128,7 +129,6 @@ export class Player {
   }
 
   updateBank(status) {
-    //console.log(`${this.name}:${status}`);
     this.bank.updateBank(...arguments);
   }
 }
@@ -140,8 +140,8 @@ export class Dealer extends Player {
 
   render() {
     super.render();
-    this.elem.querySelector(".wager").remove();
-    this.elem.querySelector(".player__ft").remove();
+    // Dealer doesn't need the following …
+    this.elem.querySelector(".wager, .player__ft").remove();
   }
 
   activate() {
