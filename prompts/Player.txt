@@ -1,0 +1,9 @@
+The following class forms the basis of the individual players including the dealer in a Blackjack game. The entire game is written in Vanilla JS, no libraries.
+
+As a senior JS developer refactor this class to improve readability.
+
+Provide the refactored code with comments explaining the changes.
+
+Next can you refactor both classes to align with best practices and modern standards.
+
+Again, provide the refactored code with comments explaining the changes.

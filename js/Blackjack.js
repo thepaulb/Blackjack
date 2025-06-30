@@ -1,5 +1,6 @@
 import deck from "./Deck.js";
-import { Player, Dealer } from "./Player.js";
+import Player from "./Player.js";
+import Dealer from "./Dealer.js";
 
 // Define the possible states
 const states = {
@@ -71,10 +72,10 @@ class Blackjack {
 
       case states.DEALER_TURN:
         const dealer = this.players[this.currentPlayer];
-        let total = this.checkHand(dealer.hand.cards);
+        let total = this.checkHand(dealer.cards);
         while (total.status < 17) {
           dealer.updateHand(this.deck.deal(1));
-          total = this.checkHand(dealer.hand.cards);
+          total = this.checkHand(dealer.cards);
         }
 
         this.state = states.GAME_OVER;
@@ -95,12 +96,12 @@ class Blackjack {
 
   checkWinners() {
     const dealer = this.players[this.players.length - 1];
-    const dealerScore = this.checkHand(dealer.hand.cards);
+    const dealerScore = this.checkHand(dealer.cards);
     const winners = [];
     // The reason for the slice() is last player in the
     // array is always the Dealer;
     this.players.slice(0, this.players.length - 1).forEach((player) => {
-      let playerScore = this.checkHand(player.hand.cards);
+      let playerScore = this.checkHand(player.cards);
       // Everything but these senario's result in a player win;
       if (
         (dealerScore.status == "bust" && playerScore.status != "bust") ||
