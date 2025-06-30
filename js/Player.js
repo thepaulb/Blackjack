@@ -8,29 +8,29 @@ export class Player {
     this.name = name;
     this.game = game;
     this.elem = this.init();
-  }
-
-  init() {
-    this.createElement();
-    this.hand = new Hand(this.elem);
-    this.render();
     // Hmmm … bad coupling :/
     if (this.name != "Dealer") {
       this.bank = new Bank(this.elem.querySelector(".wager"));
     }
+  }
+
+  init() {
+    this.elem = this.createElement();
+    this.hand = new Hand(this.elem);
+    this.render();
     return this.elem;
   }
 
   createElement() {
     // this method is used to allow the Dealer
     // class to reuse the render method;
-    this.elem = document.createElement("section");
-    this.elem.setAttribute("id", this.id);
-    this.elem.setAttribute("class", "player");
+    const elem = document.createElement("section");
+    elem.setAttribute("id", this.id);
+    elem.setAttribute("class", "player");
     const parent = document.querySelector("#players");
-    parent.append(this.elem);
-    this.elem.addEventListener("click", this);
-    return this.elem;
+    parent.append(elem);
+    elem.addEventListener("click", this);
+    return elem;
   }
 
   render() {
@@ -52,7 +52,10 @@ export class Player {
   reset() {
     delete this.hand;
     document.getElementById(`${this.id}`).remove();
-    this.init();
+    this.elem = this.init();
+    if (this.name != "Dealer") {
+      this.bank.reset(this.elem.querySelector(".wager"));
+    }
   }
 
   handleEvent(event) {
@@ -111,9 +114,8 @@ export class Player {
     } else {
       this.elem.classList.add("inactive");
     }
-    // This check is here because the Dealer doesn't have a footer;
     const footer = this.elem.querySelector(".player__ft");
-    // Dealer doesn't have a footer;
+    // This check is here because the Dealer doesn't have a footer;
     if (footer) {
       footer.classList.add("visually-hidden");
     }
