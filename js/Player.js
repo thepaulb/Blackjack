@@ -7,10 +7,10 @@ export class Player {
     this.id = name.replaceAll(" ", "").toLowerCase();
     this.name = name;
     this.game = game;
-    this.elem = this.setup();
+    this.elem = this.init();
   }
 
-  setup() {
+  init() {
     this.createElement();
     this.hand = new Hand(this.elem);
     this.render();
@@ -52,7 +52,7 @@ export class Player {
   reset() {
     delete this.hand;
     document.getElementById(`${this.id}`).remove();
-    this.setup();
+    this.init();
   }
 
   handleEvent(event) {
