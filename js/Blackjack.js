@@ -1,7 +1,8 @@
 import deck from "./Deck.js";
-import { Player, Dealer } from "./Player.js";
+import Player from "./Player.js";
+import Dealer from "./Dealer.js";
 
-// Define the possible states
+// Finite states
 const states = {
   START: "start",
   DEAL: "deal",
@@ -18,101 +19,119 @@ class Blackjack {
     this.currentPlayer = 0;
   }
 
-  transition(event, props) {
+  // 🔁 Finite State Transition Handler
+  transition(event, props = {}) {
     switch (this.state) {
       case states.START:
-        if (event == "init") {
-          console.log("Set up inital game events");
-          console.log(event + ": Add new player Dealer");
-          // this is a restart;
-          if (this.players.length == 0) {
-            //Add Dealer here;
-            this.addPlayer();
-          }
-        }
-        if (event == "addplayer") {
-          this.addPlayer();
-        }
-        if (event == "newgame") {
-          this.currentPlayer = 0;
-          // reset players in reverse to ensure dealer first;
-          for (let i = this.players.length - 1; i >= 0; i--) {
-            this.players[i].reset();
-          }
-        }
-        if (event == "deal") {
-          this.state = states.DEAL;
-          this.transition("deal");
-        }
+        this.#handleStartState(event);
         break;
 
       case states.DEAL:
-        if (event == "addplayer") {
-          console.log("Players can't be added game in play!");
-        }
-        if (event == "deal") {
-          this.state = states.PLAY;
-          // set bet first …
-          this.players.forEach((player) => player.placeBet());
-          // … then deal cards;
-          this.players.forEach((player) => this.dealCards(player, 2));
-          this.transition("activateplayer");
-        }
+        this.#handleDealState(event);
         break;
 
       case states.PLAY:
-        if (event == "activateplayer") {
-          this.setActivePlayer();
-        }
-        if (event == "playerhit") {
-          this.dealCards(props.player, 1);
-        }
+        this.#handlePlayState(event, props);
         break;
 
       case states.DEALER_TURN:
-        const dealer = this.players[this.currentPlayer];
-        let total = this.checkHand(dealer.hand.cards);
-        while (total.status < 17) {
-          dealer.updateHand(this.deck.deal(1));
-          total = this.checkHand(dealer.hand.cards);
-        }
-
-        this.state = states.GAME_OVER;
-        this.transition("gameover");
+        this.#handleDealerTurn();
         break;
 
       case states.GAME_OVER:
-        if (event == "gameover") {
-          this.checkWinners();
-        }
+        if (event === "gameover") this.#checkWinners();
         break;
 
       default:
         throw new Error("Invalid state transition");
     }
+
     console.log(`Transitioned to state: ${this.state}`);
   }
 
-  checkWinners() {
+  // ✅ Start State: Add players, reset, deal
+  #handleStartState(event) {
+    if (event === "init") {
+      if (this.players.length === 0) this.addPlayer(); // Add Dealer only once
+    }
+
+    if (event === "addplayer") {
+      this.addPlayer();
+    }
+
+    if (event === "newgame") {
+      this.currentPlayer = 0;
+      [...this.players].reverse().forEach((p) => p.reset()); // reset dealer last
+    }
+
+    if (event === "deal") {
+      this.state = states.DEAL;
+      this.transition("deal");
+    }
+  }
+
+  // ✅ Deal State: Bets & first deal
+  #handleDealState(event) {
+    if (event === "addplayer") {
+      console.log("Cannot add players while game is in play!");
+      return;
+    }
+
+    if (event === "deal") {
+      this.state = states.PLAY;
+      this.players.forEach((player) => player.placeBet());
+      this.players.forEach((player) => this.dealCards(player, 2));
+      this.transition("activateplayer");
+    }
+  }
+
+  // ✅ Play State: Activate players, handle hits
+  #handlePlayState(event, { player }) {
+    if (event === "activateplayer") {
+      this.#setActivePlayer();
+    }
+
+    if (event === "playerhit") {
+      this.dealCards(player, 1);
+    }
+  }
+
+  // ✅ Dealer turn logic: hits until 17+, then checks winners
+  #handleDealerTurn() {
+    const dealer = this.players[this.currentPlayer];
+    let total = this.checkHand(dealer.hand.cards);
+
+    while (typeof total.status === "number" && total.status < 17) {
+      dealer.updateHand(this.deck.deal(1));
+      total = this.checkHand(dealer.hand.cards);
+    }
+
+    this.state = states.GAME_OVER;
+    this.transition("gameover");
+  }
+
+  // 🎯 Determine Winners
+  #checkWinners() {
     const dealer = this.players[this.players.length - 1];
     const dealerScore = this.checkHand(dealer.hand.cards);
     const winners = [];
-    // The reason for the slice() is last player in the
-    // array is always the Dealer;
-    this.players.slice(0, this.players.length - 1).forEach((player) => {
-      let playerScore = this.checkHand(player.hand.cards);
-      // Everything but these senario's result in a player win;
-      if (
-        (dealerScore.status == "bust" && playerScore.status != "bust") ||
-        (dealerScore.status != "blackjack" &&
-          dealerScore.status <= playerScore.status) ||
-        playerScore.status == "blackjack"
-      ) {
-        // winner logic;
+
+    this.players.slice(0, -1).forEach((player) => {
+      const playerScore = this.checkHand(player.hand.cards);
+
+      const playerWins =
+        (dealerScore.status === "bust" && playerScore.status !== "bust") ||
+        (dealerScore.status !== "blackjack" &&
+          typeof dealerScore.status === "number" &&
+          playerScore.status >= dealerScore.status) ||
+        playerScore.status === "blackjack";
+
+      if (playerWins) {
         winners.push(player.name);
-        if (playerScore.status == "blackjack") {
+
+        if (playerScore.status === "blackjack") {
           player.updateBank("blackjack");
-        } else if (playerScore.status == dealerScore.status) {
+        } else if (playerScore.status === dealerScore.status) {
           player.updateBank("push");
         } else {
           player.updateBank("win");
@@ -121,35 +140,64 @@ class Blackjack {
         player.updateBank("lose");
       }
     });
-    if (winners.length == 0) {
+
+    if (winners.length === 0) {
       winners.push("House wins!");
     }
-    this.showWinners(winners.join(", "));
+
+    this.#showWinners(winners.join(", "));
   }
 
-  showWinners(winners) {
+  // 💬 Show winners dialog
+  #showWinners(winners) {
     const dialog = document.getElementById("winners__dialog");
-    const para = dialog.querySelector("p");
-    para.innerHTML = "";
-    para.append(winners);
+    dialog.querySelector("p").textContent = winners;
     dialog.showModal();
   }
 
-  setActivePlayer() {
-    // Deactivate all players first;
+  // 🎯 Activates the current player, or starts Dealer turn
+  #setActivePlayer() {
     this.players.forEach((player) => player.deactivate());
-    if (this.currentPlayer == this.players.length - 1) {
+
+    if (this.currentPlayer === this.players.length - 1) {
       this.state = states.DEALER_TURN;
-      this.transition("activateplayer");
+      this.transition();
+      return;
     }
+
     this.players[this.currentPlayer++].activate();
   }
 
+  // 🔃 Deal cards to player
+  dealCards(player, count = 1) {
+    if ([states.DEAL, states.PLAY].includes(this.state)) {
+      const cards = this.deck.deal(count);
+      player.updateHand(cards);
+    } else {
+      console.warn("Cards cannot be dealt from current state");
+    }
+  }
+
+  // ➕ Add player (Dealer added first)
+  addPlayer() {
+    if (this.state !== states.START) {
+      console.warn("Players cannot be added at this stage.");
+      return;
+    }
+
+    if (this.players.length === 0) {
+      this.players.push(new Dealer("Dealer", this));
+    } else {
+      this.players.unshift(new Player(`Player ${this.players.length}`, this));
+    }
+  }
+
+  // 🎲 Game lifecycle API
   startGame() {
     if (this.state === states.START) {
       this.transition("init");
     } else {
-      console.log("Game cannot start from current state");
+      console.warn("Game cannot start from current state");
     }
   }
 
@@ -158,73 +206,45 @@ class Blackjack {
     this.transition("newgame");
   }
 
-  addPlayer() {
-    if (this.state === states.START) {
-      // add player to the front of the array, ensuring Dealer always last;
-      if (this.players.length == 0) {
-        this.players.push(new Dealer("Dealer", this));
-      } else {
-        this.players.unshift(new Player(`Player ${this.players.length}`, this));
-        var x = 0;
-      }
-      //console.log(this.players);
-    } else {
-      console.log("Players cannot be added from current state");
-    }
-  }
-
-  dealCards(player, num) {
-    if (this.state === states.DEAL || this.state === states.PLAY) {
-      console.log("Dealing cards to player and dealer...");
-      player.updateHand(this.deck.deal(num));
-    } else {
-      console.log("Cards cannot be dealt from current state");
-    }
-  }
-
+  // 🧮 Card Value Logic
   getCardValue(card) {
-    const rank = card.slice(1); // Removes suit
+    const rank = card.slice(1);
     if (["K", "Q", "J", "10"].includes(rank)) return 10;
-    // TODO: this seems redundant?
-    if (rank === "A") return 11; // Initially count Ace as 11
+    if (rank === "A") return 11;
     return parseInt(rank);
   }
 
   checkHand(cards) {
     let value = 0;
     let aces = 0;
-    let status;
 
-    cards.forEach((card) => {
-      let rank = card.slice(1);
+    for (const card of cards) {
+      const rank = card.slice(1);
       if (rank === "A") {
-        aces++;
         value += 11;
+        aces++;
       } else {
         value += this.getCardValue(card);
       }
-    });
+    }
 
-    // Adjust for Aces if total is over 21
     while (value > 21 && aces > 0) {
-      value -= 10; // Convert one Ace from 11 to 1
+      value -= 10;
       aces--;
     }
 
-    if (value > 21) {
-      status = "bust";
-    } else if (value == 21 && cards.length == 2) {
-      status = "blackjack";
-    } else {
-      status = value;
-    }
+    let status;
+    if (value > 21) status = "bust";
+    else if (value === 21 && cards.length === 2) status = "blackjack";
+    else status = value;
 
-    return { value: value, status: status };
+    return { value, status };
   }
 }
 
-const bj = new Blackjack();
+// 🔁 Singleton export
+const bjx = new Blackjack();
 
 export default function blackjack() {
-  return bj;
+  return bjx;
 }
