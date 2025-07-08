@@ -20,7 +20,7 @@ class Blackjack {
   }
 
   // 🔁 Finite State Transition Handler
-  transition(event, props = {}) {
+  async transition(event, props = {}) {
     switch (this.state) {
       case states.START:
         this.#handleStartState(event);
@@ -35,11 +35,11 @@ class Blackjack {
         break;
 
       case states.DEALER_TURN:
-        this.#handleDealerTurn();
+        await this.#handleDealerTurn();
         break;
 
       case states.GAME_OVER:
-        if (event === "gameover") this.#checkWinners();
+        if (event === "gameover") await this.#checkWinners();
         break;
 
       default:
@@ -96,12 +96,18 @@ class Blackjack {
     }
   }
 
+  #delay(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
+
   // ✅ Dealer turn logic: hits until 17+, then checks winners
-  #handleDealerTurn() {
+  async #handleDealerTurn() {
     const dealer = this.players[this.currentPlayer];
     let total = this.checkHand(dealer.hand.cards);
 
+    // Delay and draw until dealer reaches 17 or higher
     while (typeof total.status === "number" && total.status < 17) {
+      await this.#delay(1500); // pause before each draw
       dealer.updateHand(this.deck.deal(1));
       total = this.checkHand(dealer.hand.cards);
     }
@@ -111,7 +117,8 @@ class Blackjack {
   }
 
   // 🎯 Determine Winners
-  #checkWinners() {
+  async #checkWinners() {
+    await this.#delay(2000); // pause before check
     const dealer = this.players[this.players.length - 1];
     const dealerScore = this.checkHand(dealer.hand.cards);
     const winners = [];
