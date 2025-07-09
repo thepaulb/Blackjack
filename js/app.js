@@ -22,38 +22,23 @@ Blackjack: If a player’s initial two cards are an Ace and a 10-value card, the
 */
 import blackjack from "./Blackjack.js";
 
-/**
- * Handles user inputs for initial game setup;
- * Params;
- * Elem: HTMLElement
- * Gane: Blackjack object;
- */
-class InitialisationUI {
-  constructor(elem, game) {
-    this.elem = elem;
-    this.game = game;
-    // bind events;
-    this.elem.addEventListener("click", this);
-  }
-
-  handleEvent(event) {
-    var btn = event.target.closest("[data-action]");
-    if (btn.dataset.action == "deal") {
-      this.game.transition("deal");
-    }
-    if (btn.dataset.action == "addplayer") {
-      this.game.transition("addplayer");
-    }
-    if (btn.dataset.action == "newgame") {
-      this.game.newGame();
-    }
-  }
-}
-
 window.addEventListener("DOMContentLoaded", async () => {
-  var initUI = new InitialisationUI(
-    document.querySelector("#actions_buttons"),
-    blackjack()
-  );
-  blackjack().startGame();
+  const elem = document.querySelector("#actions_buttons");
+  const game = blackjack();
+  game.startGame();
+
+  elem.addEventListener("click", (e) => {
+    const { target } = e;
+    switch (target.dataset.action) {
+      case "deal":
+        game.transition("deal");
+        break;
+      case "addplayer":
+        game.transition("addplayer");
+        break;
+      case "newgame":
+        game.newGame();
+        break;
+    }
+  });
 });
