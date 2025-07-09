@@ -9,13 +9,12 @@ export default class DealerView extends PlayerView {
     // Remove the elements specific to regular players
     this.element.querySelector(".wager")?.remove();
     this.element.querySelector(".player__ft")?.remove();
+    this.element.classList.add("inactive");
   }
 
   hideSecondCard() {
     const cards = this.element.querySelectorAll(".card");
-    if (cards[1]) {
-      cards[1].classList.add("face-down");
-    }
+    cards[1]?.classList.add("face-down");
 
     const status = this.getStatusElement();
     status?.classList.add("visually-hidden");
@@ -23,9 +22,7 @@ export default class DealerView extends PlayerView {
 
   showSecondCard() {
     const cards = this.element.querySelectorAll(".card");
-    if (cards[1]) {
-      cards[1].classList.remove("face-down");
-    }
+    cards[1]?.classList.remove("face-down");
 
     const status = this.getStatusElement();
     status?.classList.remove("visually-hidden");

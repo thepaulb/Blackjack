@@ -14,12 +14,8 @@ export default class Player {
     this.#game = game;
 
     this.view = this.isDealer()
-      ? new DealerView(name)
-      : new PlayerView(
-          name,
-          () => this.#game.transition("playerhit", { player: this }),
-          () => this.#game.transition("activateplayer")
-        );
+      ? new DealerView(name, game)
+      : new PlayerView(name, game);
 
     this.#hand = new Hand(this.view.element);
 
@@ -48,12 +44,8 @@ export default class Player {
   reset() {
     this.view.remove();
     this.view = this.isDealer()
-      ? new DealerView(this.#name)
-      : new PlayerView(
-          this.#name,
-          () => this.#game.transition("playerhit", { player: this }),
-          () => this.#game.transition("activateplayer")
-        );
+      ? new DealerView(name, game)
+      : new PlayerView(name, game);
 
     this.#hand = new Hand(this.view.element);
 

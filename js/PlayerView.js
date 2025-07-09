@@ -2,14 +2,12 @@ export default class PlayerView {
   #id;
   #name;
   #element;
-  #onHit;
-  #onStand;
+  #game;
 
-  constructor(name, onHit, onStand) {
+  constructor(name, game) {
     this.#name = name;
+    this.#game = game;
     this.#id = this.#generateId(name);
-    this.#onHit = onHit;
-    this.#onStand = onStand;
     this.#element = this.#createElement();
     this.render(this.#element);
   }
@@ -26,7 +24,7 @@ export default class PlayerView {
     section.className = "player";
 
     document.querySelector("#players")?.append(section);
-    section.addEventListener("click", this.#handleClick);
+    section.addEventListener("click", this);
 
     return section;
   }
@@ -88,13 +86,15 @@ export default class PlayerView {
   }
 
   show() {
-    this.#element.classList.replace("inactive", "active");
+    this.#element.classList.remove("inactive");
+    this.#element.classList.add("active");
     this.#element
       .querySelector(".player__ft")
       ?.classList.remove("visually-hidden");
   }
 
   hide() {
+    this.#element.classList.remove("active");
     this.#element.classList.add("inactive");
     this.#element
       .querySelector(".player__ft")
@@ -111,11 +111,13 @@ export default class PlayerView {
   // ⚡ Event Handling
   // ------------------
 
-  #handleClick = (event) => {
-    if (event.target.closest("[data-hit]")) {
-      this.#onHit?.();
-    } else if (event.target.closest("[data-stand]")) {
-      this.#onStand?.();
+  // ✅ Public — used as event listener
+  handleEvent(e) {
+    const { target } = e;
+    if (target.closest("[data-hit]")) {
+      this.#game.transition("playerhit", { player: this });
+    } else if (target.closest("[data-stand]")) {
+      this.#game.transition("activateplayer");
     }
-  };
+  }
 }

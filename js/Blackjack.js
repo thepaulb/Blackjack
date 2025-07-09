@@ -103,6 +103,7 @@ class Blackjack {
   // ✅ Dealer turn logic: hits until 17+, then checks winners
   async #handleDealerTurn() {
     const dealer = this.players[this.currentPlayer];
+    dealer.view.showSecondCard(); // Reveal dealer's second card;
     let total = this.checkHand(dealer.hand.cards);
 
     // Delay and draw until dealer reaches 17 or higher
@@ -118,11 +119,15 @@ class Blackjack {
 
   // 🎯 Determine Winners
   async #checkWinners() {
-    await this.#delay(2000); // pause before check
+    // show all players' hands
+    this.players.forEach((player) => player.activate());
+    await this.#delay(3000); // pause before check
+
     const dealer = this.players[this.players.length - 1];
     const dealerScore = this.checkHand(dealer.hand.cards);
     const winners = [];
 
+    // slice off the dealer from the players array
     this.players.slice(0, -1).forEach((player) => {
       const playerScore = this.checkHand(player.hand.cards);
 
@@ -169,7 +174,6 @@ class Blackjack {
     if (this.currentPlayer === this.players.length - 1) {
       this.state = states.DEALER_TURN;
       this.transition();
-      return;
     }
 
     this.players[this.currentPlayer++].activate();
