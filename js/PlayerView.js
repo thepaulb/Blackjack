@@ -2,11 +2,13 @@ export default class PlayerView {
   #id;
   #name;
   #element;
+  #parent;
   #game;
 
-  constructor(name, game) {
+  constructor(name, game, parent) {
     this.#name = name;
     this.#game = game;
+    this.#parent = parent;
     this.#id = this.#generateId(name);
     this.#element = this.#createElement();
     this.render(this.#element);
@@ -115,7 +117,7 @@ export default class PlayerView {
   handleEvent(e) {
     const { target } = e;
     if (target.closest("[data-hit]")) {
-      this.#game.transition("playerhit", { player: this });
+      this.#game.transition("playerhit", { player: this.#parent });
     } else if (target.closest("[data-stand]")) {
       this.#game.transition("activateplayer");
     }

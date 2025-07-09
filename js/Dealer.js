@@ -1,8 +1,9 @@
 import Player from "./Player.js";
+import DealerView from "./DealerView.js";
 
 export default class Dealer extends Player {
   constructor(name, game) {
-    super(...arguments);
+    super(...arguments, new DealerView(name, game));
   }
 
   updateHand(cards) {

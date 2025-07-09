@@ -9,13 +9,10 @@ export default class Player {
   #hand;
   #bank;
 
-  constructor(name, game) {
+  constructor(name, game, view = new PlayerView(name, game, this)) {
     this.#name = name;
     this.#game = game;
-
-    this.view = this.isDealer()
-      ? new DealerView(name, game)
-      : new PlayerView(name, game);
+    this.view = view;
 
     this.#hand = new Hand(this.view.element);
 
@@ -44,8 +41,8 @@ export default class Player {
   reset() {
     this.view.remove();
     this.view = this.isDealer()
-      ? new DealerView(name, game)
-      : new PlayerView(name, game);
+      ? new DealerView(this.#name, this.#game)
+      : new PlayerView(this.#name, this.#game, this);
 
     this.#hand = new Hand(this.view.element);
 
