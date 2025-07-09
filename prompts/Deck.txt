@@ -1,0 +1,11 @@
+Ok, final step, can we refactor the following class which forms the card deck in the Blackjack game. 
+
+As a senior JS developer refactor these 2 classes to:
+1. improve readability.
+2. Group methods together based on type; DOM manipulation, public API, game logic, etc
+
+Provide the refactored code with comments explaining the changes.
+
+NEXT, can you refactor the class to align with best practices and modern standards.
+
+Again, provide the refactored code with comments explaining the changes.

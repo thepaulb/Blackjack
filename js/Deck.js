@@ -1,85 +1,63 @@
 class Deck {
+  // Private fields for encapsulation
+  #deck = [];
+
   constructor() {
-    this.deck = this.create();
+    this.#deck = this.#createShuffledDeck();
+  }
+
+  // ---------------------------
+  // 🔹 Public API
+  // ---------------------------
+
+  deal(count = 1) {
+    if (this.#deck.length < count) {
+      throw new Error(`Not enough cards in deck to deal ${count}.`);
+    }
+
+    return this.#deck.splice(0, count);
   }
 
   getCardHtml(card) {
-    let suit = card.slice(0, 1);
-    let rank = card.slice(1);
-    let icon = null;
-    let col = "black";
-
-    // set icons for cards;
-    switch (suit) {
-      case "H":
-        icon = "&hearts;";
-        col = "red";
-        break;
-
-      case "D":
-        icon = "&diams;";
-        col = "red";
-        break;
-
-      case "C":
-        icon = "&clubs;";
-        break;
-
-      case "S":
-        icon = "&spades;";
-        break;
-    }
+    const suit = card[0];
+    const rank = card.slice(1);
+    const icon = this.#getSuitIcon(suit);
+    const colourClass = this.#getSuitColour(suit);
 
     const tmpl = document.querySelector("#card__tmpl");
     const clone = tmpl.content.cloneNode(true);
-    clone.querySelector(".card").classList.add(col);
-    clone.querySelector(".face").innerHTML = `${rank}<br />${icon}`;
+
+    const elem = clone.querySelector(".card");
+    elem.classList.add(colourClass);
+    elem.querySelector(".face").innerHTML = `${rank}<br />${icon}`;
+
     return clone;
   }
 
-  create() {
-    let deck = [];
-    let ranks = [2, 3, 4, 5, 6, 7, 8, 9, 10, "J", "Q", "K", "A"];
-    let suits = ["H", "D", "C", "S"];
+  // ---------------------------
+  // 🔸 Internal Logic
+  // ---------------------------
+
+  #createShuffledDeck() {
+    const suits = ["H", "D", "C", "S"];
+    const ranks = [2, 3, 4, 5, 6, 7, 8, 9, 10, "J", "Q", "K", "A"];
+    const deck = [];
 
     // create 52 card deck;
-    for (let i = 0; i < ranks.length; i++) {
-      for (let j = 0; j < suits.length; j++) {
-        deck.push(suits[j] + ranks[i]);
+    for (const suit of suits) {
+      for (const rank of ranks) {
+        deck.push(`${suit}${rank}`);
       }
     }
-    // TEST CASES
-    //––––––––––––––––––
-    // return ["HA", "SK", "D2", "SJ", "S6", ...this.shuffle(deck)]; // Blackjack
-    // return ['HA', 'SK', 'D2', 'S3', 'H5', 'SQ', ...this.shuffle(deck)]; // dealer hit
-    // return ["HA", "SA", "D2", "SJ", "SA", ...this.shuffle(deck)]; // wild aces;
-    // return ["H9", "SK", "D8", "SJ", "SA", ...this.shuffle(deck)]; // Player 1 wins!
-    // return ["H9", "SK", "SQ", "S10", "SA", ...this.shuffle(deck)]; // Dealer wins! off 2 cards!
 
-    return this.shuffle(deck);
+    return this.#shuffle(deck);
   }
 
-  deal(num) {
-    let cards = [];
-
-    // TODO: need to check number of cards left in the deck;
-    for (let i = 0; i < num; i++) {
-      cards.push(this.deck.shift());
-    }
-
-    return cards;
-  }
-
-  shuffle(deck) {
+  #shuffle(deck) {
     let currentIndex = deck.length;
-
-    // While there remain elements to shuffle...
-    while (currentIndex != 0) {
-      // Pick a remaining element...
-      let randomIndex = Math.floor(Math.random() * currentIndex);
-      currentIndex--;
-
-      // And swap it with the current element.
+    // shuffles an array using the Fisher–Yates algorithm
+    while (currentIndex > 0) {
+      const randomIndex = Math.floor(Math.random() * currentIndex--);
       [deck[currentIndex], deck[randomIndex]] = [
         deck[randomIndex],
         deck[currentIndex],
@@ -88,11 +66,29 @@ class Deck {
 
     return deck;
   }
+
+  // ---------------------------
+  // 🔹 DOM Utility Helpers
+  // ---------------------------
+
+  #getSuitIcon(suit) {
+    const icons = {
+      H: "&hearts;",
+      D: "&diams;",
+      C: "&clubs;",
+      S: "&spades;",
+    };
+
+    return icons[suit] || "";
+  }
+
+  #getSuitColour(suit) {
+    return ["H", "D"].includes(suit) ? "red" : "black";
+  }
 }
 
-const d = new Deck();
+const dx = new Deck();
 
-// I guess a simple factory?
 export default function deck() {
-  return d;
+  return dx;
 }
