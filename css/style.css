@@ -93,6 +93,11 @@
 
 @layer base {
   :root {
+    @font-face {
+      font-family: "Poker";
+      src: url("./assets/Poker.ttf") format("truetype");
+    }
+
     --clr-white: hsl(0, 0%, 100%);
     --clr-gray-100: hsl(0, 4%, 87%);
 
@@ -120,11 +125,6 @@
       --fs-800: 3rem;
       --fs-900: 5rem;
       --fs-1000: 7.5rem;
-    }
-
-    @font-face {
-      font-family: Blackjack;
-      src: url(./assets/CasinoShadow.ttf);
     }
 
     --text-main: var(--clr-gray-100);
@@ -335,9 +335,9 @@
   }
 
   h1 {
-    font-family: "Blackjack";
+    font-family: "Poker", sans-serif;
     margin-top: 0;
-    font-size: 3rem;
+    font-size: 4rem;
     letter-spacing: 0.2rem;
     text-align: center;
   }

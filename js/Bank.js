@@ -1,55 +1,114 @@
 export default class Bank {
-  constructor(el) {
-    this.elem = el;
-    this.bank = 20;
-    this.stake = 0;
-    this.elem.addEventListener("change", this);
+  // Private state
+  #bank = 20;
+  #stake = 0;
+  #element = null;
+
+  constructor(element) {
+    this.#element = element;
+    this.#bindEvents();
+    this.#renderInitialBank();
   }
 
-  handleEvent(e) {
-    if (e.target.value <= this.bank) {
-      this.stake = parseInt(e.target.value);
-      var temp = this.bank - this.stake;
-      var stk = this.elem.querySelector(".stake .chip");
-      var bnk = this.elem.querySelector(".bank .chip");
-      stk.innerHTML = "";
-      bnk.innerHTML = "";
-      stk.append(this.stake);
-      bnk.append(temp);
-    }
-  }
+  // -------------------------
+  // 🔹 Public API
+  // -------------------------
 
-  reset(el) {
-    // reset this.elem and bind event;
-    this.elem = el;
-    this.elem.addEventListener("change", this);
-    this.elem.querySelector(".bank .chip").innerHTML = this.bank;
+  reset(element) {
+    this.#element = element;
+    this.#bank = 20;
+    this.#stake = 0;
+    this.#bindEvents();
+    this.#renderInitialBank();
   }
 
   updateBank(status) {
-    // assume player loses;
-    this.bank = this.bank - this.stake;
-    if (status == "blackjack") {
-      this.bank = this.bank + this.stake * 3;
-    } else if (status == "push") {
-      // return stake;
-      this.bank = this.bank + this.stake;
-    } else if (status == "win") {
-      // player wins;
-      this.bank = this.bank + this.stake * 2;
+    switch (status) {
+      case "blackjack":
+        this.#bank += this.#stake * 2; // Blackjack pays 3x (1 already removed on stake)
+        this.#bank += this.#stake;
+        break;
+      case "push":
+        this.#bank += this.#stake; // Stake returned
+        break;
+      case "win":
+        this.#bank += this.#stake * 2; // Win pays 2x
+        break;
+      case "lose":
+      default:
+        // Stake already subtracted
+        break;
     }
-    this.stake = 0;
+
+    this.#stake = 0;
   }
 
   activate() {
-    this.elem.querySelector(".bank").classList.remove("visually-hidden");
-    this.elem.querySelector(".set-stake").classList.remove("visually-hidden");
-    this.elem.querySelector(".stake").classList.add("visually-hidden");
+    this.#toggleVisibility(true);
   }
 
   deactivate() {
-    this.elem.querySelector(".bank").classList.add("visually-hidden");
-    this.elem.querySelector(".set-stake").classList.add("visually-hidden");
-    this.elem.querySelector(".stake").classList.remove("visually-hidden");
+    this.#toggleVisibility(false);
+  }
+
+  // -------------------------
+  // 🔸 DOM Event Handling
+  // -------------------------
+
+  #bindEvents() {
+    this.#element.removeEventListener("change", this);
+    this.#element.addEventListener("change", this);
+  }
+
+  handleEvent(e) {
+    if (e.type === "change") {
+      this.#handleStakeChange(e);
+    }
+  }
+
+  #handleStakeChange(e) {
+    const input = e.target;
+    const newStake = parseInt(input.value, 10);
+
+    if (isNaN(newStake) || newStake > this.#bank) {
+      return;
+    }
+
+    this.#stake = newStake;
+    this.#renderChips();
+  }
+
+  // -------------------------
+  // 🔸 DOM Manipulation
+  // -------------------------
+
+  #renderChips() {
+    const stakeChip = this.#element.querySelector(".stake .chip");
+    const bankChip = this.#element.querySelector(".bank .chip");
+
+    stakeChip.innerHTML = "";
+    bankChip.innerHTML = "";
+
+    stakeChip.append(this.#stake);
+    bankChip.append(this.#bank - this.#stake);
+  }
+
+  #renderInitialBank() {
+    const bankChip = this.#element.querySelector(".bank .chip");
+    if (bankChip) {
+      bankChip.innerHTML = this.#bank;
+    }
+  }
+
+  #toggleVisibility(showBankInputs) {
+    this.#element
+      .querySelector(".bank")
+      .classList.toggle("visually-hidden", !showBankInputs);
+    this.#element
+      .querySelector(".set-stake")
+      .classList.toggle("visually-hidden", !showBankInputs);
+    this.#element
+      .querySelector(".stake")
+      .classList.toggle("visually-hidden", showBankInputs);
   }
 }
