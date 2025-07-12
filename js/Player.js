@@ -17,7 +17,7 @@ export default class Player {
     this.#hand = new Hand(this.view.element);
 
     if (!this.isDealer()) {
-      this.#bank = new Bank(this.view.element.querySelector(".wager"));
+      this.#bank = new Bank(this.view.element.querySelector(".bank-panel"));
     }
   }
 
@@ -47,7 +47,7 @@ export default class Player {
     this.#hand = new Hand(this.view.element);
 
     if (!this.isDealer()) {
-      this.#bank.reset(this.view.element.querySelector(".wager"));
+      this.#bank.reset(this.view.element.querySelector(".bank-panel"));
     }
   }
 

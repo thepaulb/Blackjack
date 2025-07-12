@@ -7,7 +7,7 @@ export default class DealerView extends PlayerView {
 
   onRenderComplete() {
     // Remove the elements specific to regular players
-    this.element.querySelector(".wager")?.remove();
+    this.element.querySelector(".bank-panel")?.remove();
     this.element.querySelector(".player__ft")?.remove();
     this.element.classList.add("inactive");
   }

@@ -1,13 +1,17 @@
 export default class Bank {
-  // Private state
+  // Private fields
   #bank = 20;
   #stake = 0;
   #element = null;
+  #warningEl = null;
 
   constructor(element) {
     this.#element = element;
+    this.#warningEl = this.#element.querySelector(".warning");
+
+    this.#loadBankFromStorage();
     this.#bindEvents();
-    this.#renderInitialBank();
+    this.#renderChips();
   }
 
   // -------------------------
@@ -16,31 +20,33 @@ export default class Bank {
 
   reset(element) {
     this.#element = element;
-    this.#bank = 20;
+    this.#warningEl = this.#element.querySelector(".warning");
     this.#stake = 0;
+    this.#saveBankToStorage();
     this.#bindEvents();
-    this.#renderInitialBank();
+    this.#renderChips();
   }
 
   updateBank(status) {
     switch (status) {
       case "blackjack":
-        this.#bank += this.#stake * 2; // Blackjack pays 3x (1 already removed on stake)
+        this.#bank += this.#stake * 2;
         this.#bank += this.#stake;
         break;
       case "push":
-        this.#bank += this.#stake; // Stake returned
+        this.#bank += this.#stake;
         break;
       case "win":
-        this.#bank += this.#stake * 2; // Win pays 2x
+        this.#bank += this.#stake * 2;
         break;
       case "lose":
       default:
-        // Stake already subtracted
         break;
     }
 
     this.#stake = 0;
+    this.#saveBankToStorage();
+    this.#renderChips(true); // animate win/loss
   }
 
   activate() {
@@ -68,47 +74,77 @@ export default class Bank {
 
   #handleStakeChange(e) {
     const input = e.target;
-    const newStake = parseInt(input.value, 10);
+    const value = parseInt(input.value, 10);
 
-    if (isNaN(newStake) || newStake > this.#bank) {
+    if (isNaN(value) || value > this.#bank || value < 0) {
+      this.#showWarning("Stake exceeds available chips");
       return;
     }
 
-    this.#stake = newStake;
-    this.#renderChips();
+    this.#stake = value;
+    this.#hideWarning();
+    this.#renderChips(true); // animate stake change
   }
 
   // -------------------------
   // 🔸 DOM Manipulation
   // -------------------------
 
-  #renderChips() {
+  #renderChips(animate = false) {
     const stakeChip = this.#element.querySelector(".stake .chip");
     const bankChip = this.#element.querySelector(".bank .chip");
 
-    stakeChip.innerHTML = "";
-    bankChip.innerHTML = "";
+    if (!stakeChip || !bankChip) return;
 
-    stakeChip.append(this.#stake);
-    bankChip.append(this.#bank - this.#stake);
-  }
+    if (animate) {
+      stakeChip.classList.add("chip-animate");
+      bankChip.classList.add("chip-animate");
 
-  #renderInitialBank() {
-    const bankChip = this.#element.querySelector(".bank .chip");
-    if (bankChip) {
-      bankChip.innerHTML = this.#bank;
+      setTimeout(() => {
+        stakeChip.classList.remove("chip-animate");
+        bankChip.classList.remove("chip-animate");
+      }, 400); // match CSS animation time
     }
+
+    stakeChip.textContent = this.#stake;
+    bankChip.textContent = this.#bank - this.#stake;
   }
 
   #toggleVisibility(showBankInputs) {
     this.#element
       .querySelector(".bank")
-      .classList.toggle("visually-hidden", !showBankInputs);
+      ?.classList.toggle("visually-hidden", !showBankInputs);
     this.#element
       .querySelector(".set-stake")
-      .classList.toggle("visually-hidden", !showBankInputs);
+      ?.classList.toggle("visually-hidden", !showBankInputs);
     this.#element
       .querySelector(".stake")
-      .classList.toggle("visually-hidden", showBankInputs);
+      ?.classList.toggle("visually-hidden", showBankInputs);
+  }
+
+  #showWarning(msg) {
+    if (!this.#warningEl) return;
+    this.#warningEl.textContent = msg;
+    this.#warningEl.classList.remove("visually-hidden");
+  }
+
+  #hideWarning() {
+    if (!this.#warningEl) return;
+    this.#warningEl.classList.add("visually-hidden");
+  }
+
+  // -------------------------
+  // 🔸 Persistence
+  // -------------------------
+
+  #saveBankToStorage() {
+    localStorage.setItem("blackjack_bank", String(this.#bank));
+  }
+
+  #loadBankFromStorage() {
+    const stored = parseInt(localStorage.getItem("blackjack_bank"), 10);
+    if (!isNaN(stored)) {
+      this.#bank = stored;
+    }
   }
 }
