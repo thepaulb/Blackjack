@@ -121,7 +121,7 @@ class Blackjack {
   async #checkWinners() {
     // show all players' hands
     this.players.forEach((player) => player.activate());
-    await this.#delay(3000); // pause before check
+    await this.#delay(1750); // pause before check
 
     const dealer = this.players[this.players.length - 1];
     const dealerScore = this.checkHand(dealer.hand.cards);

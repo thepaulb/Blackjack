@@ -36,13 +36,11 @@ export default class Bank {
     switch (status) {
       case "blackjack":
         this.#bank += this.#stake * 2;
-        this.#bank += this.#stake;
         break;
       case "push":
-        this.#bank += this.#stake;
         break;
       case "win":
-        this.#bank += this.#stake * 2;
+        this.#bank += this.#stake;
         break;
       case "lose":
         this.#bank -= this.#stake;
