@@ -17,13 +17,21 @@ export default class Player {
     this.#hand = new Hand(this.view.element);
 
     if (!this.isDealer()) {
-      this.#bank = new Bank(this.view.element.querySelector(".bank-panel"));
+      const elem = this.view.element.querySelector(".bank-panel");
+      this.#bank = new Bank(elem, this.#name);
     }
   }
 
   // ----------------------
   // 🧠 Game Logic
   // ----------------------
+
+  #createBank() {
+    if (!this.isDealer() && !this.#bank) {
+      const elem = this.view.element.querySelector(".bank-panel");
+      this.#bank = new Bank(elem, this.#name);
+    }
+  }
 
   updateHand(cards) {
     this.view.updateCards(cards, (card, container) =>

@@ -1,17 +1,22 @@
 export default class Bank {
   // Private fields
   #bank = 20;
+  #id = null;
   #stake = 0;
   #element = null;
   #warningEl = null;
 
-  constructor(element) {
+  constructor(element, parent) {
     this.#element = element;
     this.#warningEl = this.#element.querySelector(".warning");
-
+    this.#id = this.#generateId(parent);
     this.#loadBankFromStorage();
     this.#bindEvents();
     this.#renderChips();
+  }
+
+  #generateId(parent) {
+    return `blackjack_${parent.replaceAll(" ", "").toLowerCase()}_bank`;
   }
 
   // -------------------------
@@ -40,6 +45,7 @@ export default class Bank {
         this.#bank += this.#stake * 2;
         break;
       case "lose":
+        this.#bank -= this.#stake;
       default:
         break;
     }
@@ -75,6 +81,7 @@ export default class Bank {
   #handleStakeChange(e) {
     const input = e.target;
     const value = parseInt(input.value, 10);
+    console.log("Stake change event:", value);
 
     if (isNaN(value) || value > this.#bank || value < 0) {
       this.#showWarning("Stake exceeds available chips");
@@ -138,11 +145,11 @@ export default class Bank {
   // -------------------------
 
   #saveBankToStorage() {
-    localStorage.setItem("blackjack_bank", String(this.#bank));
+    localStorage.setItem(this.#id, String(this.#bank));
   }
 
   #loadBankFromStorage() {
-    const stored = parseInt(localStorage.getItem("blackjack_bank"), 10);
+    const stored = parseInt(localStorage.getItem(this.#id), 10);
     if (!isNaN(stored)) {
       this.#bank = stored;
     }
