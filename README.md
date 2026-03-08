@@ -1,2 +1,3 @@
 # Blackjack
-Blackjack game, a test for new coding skills
+Blackjack game, a playground for new coding skills
+Hosted on Netlify: https://ourjck.netlify.app/
